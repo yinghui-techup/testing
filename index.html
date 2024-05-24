@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Questions Generator</title>
+</head>
+<body>
+    <h1>Interview Questions Generator</h1>
+    <form id="questionForm">
+        <label for="role">Enter a business role:</label>
+        <input type="text" id="role" name="role" required>
+        <button type="submit">Generate Questions</button>
+    </form>
+    <div id="questions"></div>
+
+    <script>
+        document.getElementById('questionForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const role = document.getElementById('role').value;
+
+            try {
+                const response = await fetch('/generate-questions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ role })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                document.getElementById('questions').innerHTML = data.questions.map(q => `<p>${q}</p>`).join('');
+            } catch (error) {
+                console.error('Error fetching questions:', error);
+                document.getElementById('questions').innerHTML = `<p>Error: ${error.message}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>
