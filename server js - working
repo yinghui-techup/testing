@@ -1,0 +1,50 @@
+const express = require('express');
+const bodyParser = require('body-parser');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+require('dotenv').config();
+const path = require('path');
+
+const app = express();
+const port = 3000;
+
+const genAI = new GoogleGenerativeAI(process.env.API_KEY);
+
+// Middleware
+app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname))); // Serve static files from the root directory
+
+// Endpoint to generate questions
+app.post('/generate-questions', async (req, res) => {
+    const { role } = req.body;
+    const prompt = ` for ${role} provide short description of what this role is about, the soft and hard skills neded and List 3 interview questions. for each question, also include rationale from a hiring manager perspective, as well as sample response in a STAR format. keep response to 100 words or less for each question.`;
+
+    console.log('Received role:', role); // Log the received role
+
+    try {
+
+
+        // The Gemini 1.5 models are versatile and work with both text-only and multimodal prompts
+        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest'});
+
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = await response.text();
+
+        const questions = text.trim().split('\n').filter(q => q.trim() !== '');
+        console.log("Generated Questions:", questions); // Log the generated questions
+
+        res.json({ questions });
+    } catch (error) {
+        console.error("Error generating questions:", error);
+        res.status(500).json({ error: 'Failed to generate questions' });
+    }
+});
+
+// Handle all other routes by serving the index.html file
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
+});
