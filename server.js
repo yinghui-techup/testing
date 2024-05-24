@@ -13,6 +13,85 @@ const genAI = new GoogleGenerativeAI(process.env.API_KEY);
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname))); // Serve static files from the root directory
 
+// Endpoint to generate answer to specific questions
+app.post('/question-answer', async (req, res) => {
+    const { qnSpecific, ansSpecific } = req.body;
+    const qnaprompt = `Given the following interview question and candidate's response, generate a STAR formatted answer. Ensure each part of STAR is clearly labeled.
+    Interview Question: ${qnSpecific}
+    Candidate's Response: ${ansSpecific}
+    
+    STAR Format:
+    ## Situation:
+    ## Task:
+    ## Action:
+    ## Result:`;
+
+    console.log('Received question:', qnSpecific);
+    console.log('Received answer:', ansSpecific);
+
+    try {
+        const generationConfig = {
+            stopSequences: ["red"],
+            maxOutputTokens: 200,
+            temperature: 0.9,
+            topP: 0.1,
+            topK: 16,
+        };
+
+        // The Gemini 1.5 models are versatile and work with both text-only and multimodal prompts
+        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest', generationConfig });
+
+        const qnaresult = await model.generateContent(qnaprompt);
+        const qnaresponse = await qnaresult.response;
+        const text = await qnaresponse.text();
+
+        console.log('Raw API response text:', text);
+
+        // Adjust the parsing logic
+        const starParts = {
+            situation: '',
+            task: '',
+            action: '',
+            result: ''
+        };
+
+        const situationMatch = text.match(/## Situation:(.*?)(##|$)/s);
+        console.log('Situation Match:', situationMatch);
+        const taskMatch = text.match(/## Task:(.*?)(##|$)/s);
+        console.log('Task Match:', taskMatch);
+        const actionMatch = text.match(/## Action:(.*?)(##|$)/s);
+        console.log('Action Match:', actionMatch);
+        const resultMatch = text.match(/## Result:(.*?)(##|$)/s);
+        console.log('Result Match:', resultMatch);
+
+        starParts.situation = situationMatch ? situationMatch[1].trim() : '';
+        starParts.task = taskMatch ? taskMatch[1].trim() : '';
+        starParts.action = actionMatch ? actionMatch[1].trim() : '';
+        starParts.result = resultMatch ? resultMatch[1].trim() : '';
+
+        console.log('Extracted STAR Parts:', starParts);
+
+        res.json({ starresponse: starParts });
+
+    } catch (error) {
+        console.error("Error generating STAR response:", error);
+        res.status(500).json({ error: 'Failed to generate questions' });
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // Endpoint to generate questions
 app.post('/generate-questions', async (req, res) => {
     const { role } = req.body;
