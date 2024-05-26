@@ -10,14 +10,131 @@
 <body>
     <%- include('../partials/navbar') %> <!-- Include the navbar -->
 
+    <main>
+        <div class="container marketing">
 
-    <h1>Create New Job Application</h1>
+        <div>
+            <br>
+            <p></p>
+          <h1>Example headline.</h1>
+          <p>Some representative placeholder content for the first slide of the carousel.</p>
+        </div>
+    
+
+
+
+
+
     <form action="/applications" method="POST">
-        <label for="company">Company:</label>
-        <input type="text" id="company" name="company" required><br>
+ 
+        <div class="row mb-3">
+            <label for="name" class="col-sm-2 col-form-label">Name</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="name" name="name" required>
+            </div>
+          </div>
 
-        <label for="role">Role:</label>
-        <input type="text" id="role" name="role" required><br>
+          <div class="row mb-3">
+            <label for="company" class="col-sm-2 col-form-label">Company</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="company" name="company"   required>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <label for="role" class="col-sm-2 col-form-label"> </label>
+            <div class="col">
+              <input type="text" id="role" class="form-control" placeholder="Role" aria-label="First name" name="role" >
+            </div>
+
+            <div class="col">
+
+            <select class="form-select" aria-label="Default select example" id="industry" name="industry">
+                
+                <% industries.forEach(function(industry) { %>
+                    <option value="<%= industry %>"><%= industry %></option>
+                <% }); %>
+              
+            </select>
+            </div>
+          </div>
+
+        <div class="row mb-3">
+            <label for="status" class="col-sm-2 col-form-label">Status</label>
+            <div class="col-sm-10">
+                <select class="form-select" aria-label="Default select example" id="status" name="status" >
+                    <option value="1">Ongoing</option>
+                    <option value="2">Rejected</option>
+                    <option value="3">Accepted</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-sm-10 offset-sm-2">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="applied" name="applied" >
+              <label class="form-check-label" for="gridCheck1">
+                Applied?
+              </label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="firstInterview" name="firstInterview" >
+                <label class="form-check-label" for="gridCheck2">
+                  First Interview?
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="secondInterview" name="secondInterview" >
+                <label class="form-check-label" for="gridCheck3">
+                  Second Interview?
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="finalInterview" name="finalInterview">
+                <label class="form-check-label" for="gridCheck4">
+                  Final Interview?
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="offer" name="offer" >
+                <label class="form-check-label" for="gridCheck5">
+                  Offer?
+                </label>
+              </div>
+          </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="inputPassword3" class="col-sm-2 col-form-label">Notes</label>
+            <div class="col-sm-10">
+              <textarea class="form-control" placeholder="Leave a comment here" id="notes" name="notes" style="height: 100px"></textarea>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-lg btn-primary" >Submit</button>
+  
+    </form>
+
+
+
+       <!-- <label for="company">Company:</label>
+       // <input type="text" id="company" name="company" required><br>
+    
+        <div class="row mb-3">
+            <label for="company" class="col-sm-2 col-form-label">Company</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" id="company" name="company" required>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label for="role" class="col-sm-2 col-form-label">Role:</label>
+            <div class="col-sm-10">
+        <input type="text" class="form-control" id="role" name="role" required><br>
+          </div>
+        </div>
+    
+
 
         <label for="hiringManager">Hiring Manager:</label>
         <input type="text" id="hiringManager" name="hiringManager"><br>
@@ -48,7 +165,10 @@
         <button type="submit">Submit</button>
     </form>
     <a href="/">Back to list</a>
+        --> 
 
+    </div>
+    </main>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>

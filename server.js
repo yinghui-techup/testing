@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const prisma = new PrismaClient();
 const app = express();
 const path = require('path');
+const fs = require('fs');
 
 
 app.set('view engine', 'ejs');
@@ -72,48 +73,101 @@ app.get('/index', (req, res) => {
 
 app.get('/job-tracker', async (req, res) => {
     const applications = await prisma.jobApplication.findMany();
+    //const totalApplications = applications.length;
+    //const firstInterviews = applications.filter(a => a.firstInterview).length;
+    //const finalInterviews = applications.filter(a => a.finalInterview).length;
+    //const offers = applications.filter(a => a.offer).length;
+
+    //const firstInterviewRate = (firstInterviews / totalApplications * 100).toFixed(2);
+    //const finalInterviewRate = (finalInterviews / firstInterviews * 100).toFixed(2);
+    //const offerRate = (offers / finalInterviews * 100).toFixed(2);
+
     const totalApplications = applications.length;
     const firstInterviews = applications.filter(a => a.firstInterview).length;
+    const secondInterviews = applications.filter(a => a.secondInterview).length;
     const finalInterviews = applications.filter(a => a.finalInterview).length;
     const offers = applications.filter(a => a.offer).length;
+    
+    const firstInterviewRate = totalApplications > 0 ? (firstInterviews / totalApplications * 100).toFixed(2) : "0.00";
+    const secondInterviewRate = firstInterviews > 0 ? (secondInterviews / firstInterviews * 100).toFixed(2) : "0.00";
+    const finalInterviewRate = secondInterviews > 0 ? (finalInterviews / secondInterviews * 100).toFixed(2) : "0.00";
+    const offerRate = finalInterviews > 0 ? (offers / finalInterviews * 100).toFixed(2) : "0.00";
+    
 
-    const firstInterviewRate = (firstInterviews / totalApplications * 100).toFixed(2);
-    const finalInterviewRate = (finalInterviews / firstInterviews * 100).toFixed(2);
-    const offerRate = (offers / finalInterviews * 100).toFixed(2);
+
 
     res.render('pages/index', {
         applications,
         totalApplications,
         firstInterviews,
+        secondInterviews,
         finalInterviews,
         offers,
         firstInterviewRate,
+        secondInterviewRate,
         finalInterviewRate,
         offerRate
     });
 });
 
 
+// adding industries
+//const industries = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'industries.json'), 'utf8'));
+
+// Route to display the form
 app.get('/create', (req, res) => {
-    res.render('pages/create');
+    fs.readFile(path.join(__dirname, 'data', 'industries.json'), 'utf8', (err, data) => {
+        if (err) {
+            // Properly handle the error, maybe render an error page or send an error status
+            console.error("Failed to read industries file:", err);
+            res.status(500).send("Error loading page data.");
+            return;
+        }
+        const industries = JSON.parse(data).industries;
+        res.render('pages/create', { industries });
+    });
 });
 
+
 app.post('/applications', async (req, res) => {
-    const { company, role, status } = req.body;
-    await prisma.jobApplication.create({
-        data: {
-            company,
-            role,
-            status, // Add status to data creation
-            hiringManager: req.body.hiringManager || '',
-            applied: req.body.applied === 'on',
-            firstInterview: req.body.firstInterview === 'on',
-            finalInterview: req.body.finalInterview === 'on',
-            offer: req.body.offer === 'on',
-            notes: req.body.notes || ''
-        }
-    });
-    res.redirect('/');
+    console.log(req.body);  // Log the full request body to see what is being submitted
+
+    const {
+        name,
+        company,
+        role,
+        industry,
+        status,
+        applied,
+        firstInterview,
+        secondInterview,
+        finalInterview,
+        offer,
+        notes
+    } = req.body;
+
+    try {
+        await prisma.jobApplication.create({
+            data: {
+                name,
+                company,
+                role,
+                industry,
+                status,
+                applied: applied === 'on',  // Checkboxes return 'on' if checked
+                firstInterview: firstInterview === 'on',
+                secondInterview: secondInterview === 'on',
+                finalInterview: finalInterview === 'on',
+                offer: offer === 'on',
+                notes
+            }
+        });
+        res.redirect('/job-tracker'); // Adjust the redirect to your success page
+    } catch (error) {
+        console.error('Failed to create job application:', error);
+        res.status(500).send('Error creating job application');
+    }
+
 });
 
 
@@ -284,6 +338,7 @@ app.post('/question-answer', async (req, res) => {
 
 
 
+///////////////////////////THIS IS TO CREATE FUNNEL VIEW///////////////
 
 
 
@@ -291,15 +346,3 @@ app.post('/question-answer', async (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-//AFTER INTERGRATION OF BOOTSTRAP LANDING TO GENAI, THIS IS A SHOWSTOPPER SO COMMENTED OUT
-//app.listen(port, () => {
-//    console.log(`Server running at http://localhost:${port}`);
-//});
