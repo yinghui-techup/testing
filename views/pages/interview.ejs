@@ -11,7 +11,7 @@
 
 
     <title>Interview Questions Generator</title>
-    <style>
+    <!--<style>
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
@@ -34,7 +34,7 @@
         .rationale, .starresponse > div {
             margin-top: 10px;
         }
-    </style>
+    </style>  -->
 </head>
 <body>
 
@@ -68,7 +68,7 @@
     <div class="accordion" id="accordionQuestions">
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingOne">
-                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                     What do you need to do well in this role?
                 </button>
             </h2>
@@ -76,6 +76,7 @@
                 <div class="accordion-body" id="roleAdvice"></div>
             </div>
         </div>
+
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingTwo">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
@@ -86,6 +87,7 @@
                 <div class="accordion-body" id="hardSkills"></div>
             </div>
         </div>
+
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingThree">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
@@ -139,7 +141,7 @@
             </div>
           </div>
         </div> -->
-      </div> 
+      
 
 
     
@@ -204,8 +206,24 @@
         </div>
         <button type="submit" class="btn btn-primary">Answer this in STAR format</button>
     </form>
-    <div id="starresponse"></div>
-    
+ 
+    <div class="d-flex p-2"> </div>
+
+
+        <!-- Initially hidden textarea for STAR responses -->
+        <!-- STAR Response List (initially hidden) -->
+        <div id="starResponseContainer" style="display:none;">
+            <ul class="list-group list-group-horizontal-xxl" id="starResponseList">
+                <li class="list-group-item" id="situationItem">Situation:</li>
+                <li class="list-group-item" id="taskItem">Task:</li>
+                <li class="list-group-item" id="actionItem">Action:</li>
+                <li class="list-group-item" id="resultItem">Result:</li>
+            </ul>
+        </div>
+
+
+
+
     <script>
     function autoResize(textarea) {
         textarea.style.height = 'auto';  // Reset the height
@@ -339,7 +357,7 @@ document.getElementById('softSkills').innerHTML = softSkills.length > 0 ?
 
 //////////SECOND EVENT LISTENER: based on the question to generate an answer PORTION///////////////////////
 
-        document.getElementById('qnaSpecific').addEventListener('submit', async (event) => {
+/*       document.getElementById('qnaSpecific').addEventListener('submit', async (event) => {
             event.preventDefault();
             const qnSpecific = document.getElementById('qnSpecific').value;
             const ansSpecific = document.getElementById('ansSpecific').value;
@@ -357,25 +375,73 @@ document.getElementById('softSkills').innerHTML = softSkills.length > 0 ?
                 });
 
                 if (!starresponse.ok) {
-                    throw new Error(`HTTP error! status: ${starresponse.status}`);
+            throw new Error(`HTTP error! status: ${starresponse.status}`);
+        }
+
+        const data = await starresponse.json();
+        const star = data.starresponse;
+
+        // Update and show the textarea with the STAR response
+        const starResponseArea = document.getElementById('starResponse');
+        starResponseArea.value = `Situation: ${star.situation}\nTask: ${star.task}\nAction: ${star.action}\nResult: ${star.result}`;
+        document.getElementById('starResponseContainer').style.display = 'block';
+
+                } catch (error) {
+                    console.error('Error fetching questions:', error);
+                    document.getElementById('starResponseContainer').style.display = 'none';
+                    alert(`Error: ${error.message}`); // Display error in alert or modify to show in a dedicated error element
                 }
+            });
 
-                const data = await starresponse.json();
+
+
+
+<!-- Other content of interview.ejs -->
+<!-- This might include other HTML and script tags -->
+*/
+
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('qnaSpecific').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const qnSpecific = document.getElementById('qnSpecific').value;
+        const ansSpecific = document.getElementById('ansSpecific').value;
+
+        try {
+            const response = await fetch('/question-answer', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ qnSpecific, ansSpecific })
+            });
+
+            if (!response.ok) throw new Error('HTTP error, status = ' + response.status);
+            
+            const data = await response.json();
+
+            if (data.error) {
+                // Display error message if any
+                document.getElementById('starResponseContainer').style.display = 'block';
+                document.getElementById('situationItem').textContent = data.error;
+                document.getElementById('taskItem').textContent = ""; // Clear other fields
+                document.getElementById('actionItem').textContent = "";
+                document.getElementById('resultItem').textContent = "";
+            } else {
                 const star = data.starresponse;
-                document.getElementById('starresponse').innerHTML = `
-                    <div class="starresponse">
-                        <p><strong>Situation:</strong> ${star.situation}</p>
-                        <p><strong>Task:</strong> ${star.task}</p>
-                        <p><strong>Action:</strong> ${star.action}</p>
-                        <p><strong>Result:</strong> ${star.result}</p>
-                    </div>
-                `;
-
-            } catch (error) {
-                console.error('Error fetching questions:', error);
-                document.getElementById('starresponse').innerHTML = `<p>Error: ${error.message}</p>`;
+                document.getElementById('situationItem').textContent = `Situation: ${star.situation}`;
+                document.getElementById('taskItem').textContent = `Task: ${star.task}`;
+                document.getElementById('actionItem').textContent = `Action: ${star.action}`;
+                document.getElementById('resultItem').textContent = `Result: ${star.result}`;
+                document.getElementById('starResponseContainer').style.display = 'block';
             }
-        });
+        } catch (error) {
+            console.error('Error fetching questions:', error);
+            alert(`Error: ${error.message}`);
+            document.getElementById('starResponseContainer').style.display = 'none';
+        }
+    });
+});
+
     </script>
 
 
@@ -385,5 +451,6 @@ document.getElementById('softSkills').innerHTML = softSkills.length > 0 ?
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     </div>
+</div> 
 </body>
 </html>

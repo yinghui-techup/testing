@@ -401,7 +401,7 @@ app.post('/generate-questions', async (req, res) => {
 //----------PROMPT TO GENERATE STAR RESPONSE TO SPECFIC INTERVIEW QUESTIONS--------------------------------
 // Endpoint to generate answer to specific questions
 
-app.post('/question-answer', async (req, res) => {
+/*app.post('/question-answer', async (req, res) => {
     const { qnSpecific, ansSpecific } = req.body;
     const qnaprompt = `Given the following interview question and candidate's response, generate a STAR formatted answer. Ensure each part of STAR is clearly labeled.
     Interview Question: ${qnSpecific}
@@ -465,6 +465,69 @@ app.post('/question-answer', async (req, res) => {
         res.status(500).json({ error: 'Failed to generate questions' });
     }
 });
+*/
+
+app.post('/question-answer', async (req, res) => {
+    const { qnSpecific, ansSpecific } = req.body;
+    console.log('Endpoint Hit: /question-answer');
+    console.log('Received question:', qnSpecific);
+    console.log('Received answer:', ansSpecific);
+
+    const qnaprompt = `Given the following interview question and candidate's response, generate a STAR formatted answer. Ensure each part of STAR is clearly labeled.
+    Interview Question: ${qnSpecific}
+    Candidate's Response: ${ansSpecific}
+    
+    STAR Format:
+    ## Situation:
+    ## Task:
+    ## Action:
+    ## Result:
+        
+    `;
+
+    try {
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash"});
+        const result = await model.generateContent(qnaprompt);
+        const response = await result.response;  // Assuming response contains the textual data
+        const text = await response.text();
+
+        console.log('Raw API response text:', text);
+
+        // Check if the response is the special case for insufficient information
+       // if (text.startsWith("Sorry, need more information.")) {
+       //     res.json({ error: "Sorry, need more information." });
+        //} else {
+            const starParts = parseStarResponse(text);
+            res.json({ starresponse: starParts });
+       // }
+    } catch (error) {
+        console.error("Error generating STAR response:", error);
+        res.status(500).json({ error: 'Failed to generate questions' });
+    }
+});
+
+function parseStarResponse(text) {
+    const starParts = {
+        situation: '',
+        task: '',
+        action: '',
+        result: ''
+    };
+
+    const situationMatch = text.match(/## Situation:(.*?)(##|$)/s);
+    const taskMatch = text.match(/## Task:(.*?)(##|$)/s);
+    const actionMatch = text.match(/## Action:(.*?)(##|$)/s);
+    const resultMatch = text.match(/## Result:(.*?)(##|$)/s);
+
+    starParts.situation = situationMatch ? situationMatch[1].trim() : '';
+    starParts.task = taskMatch ? taskMatch[1].trim() : '';
+    starParts.action = actionMatch ? actionMatch[1].trim() : '';
+    starParts.result = resultMatch ? resultMatch[1].trim() : '';
+
+    return starParts;
+}
+
+
 
 /////////////////////END OF STAR ANSWER PORTION////////////////////////////////////////////////
 
