@@ -14,8 +14,15 @@ datasource db {
 }
 
 
-model Post {
-  id        Int       @id @default(autoincrement())
-  title     String
-  content   String
+model JobApplication {
+    id             Int      @id @default(autoincrement())
+    company        String
+    role           String
+    hiringManager  String
+    applied        Boolean  @default(false)
+    firstInterview Boolean  @default(false)
+    finalInterview Boolean  @default(false)
+    offer          Boolean  @default(false)
+    status         String   @default("Ongoing") @db.VarChar(20)
+    notes          String
 }

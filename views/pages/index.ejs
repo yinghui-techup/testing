@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="/css/carousel.css" rel="stylesheet">
+    <title>Document</title>
+</head>
+
+
+
+
+<body>
+    <%- include('../partials/navbar') %> <!-- Include the navbar -->
+
+
+    <h1>Job Application Tracker</h1>
+    <h2>Summary</h2>
+    <p>Total Applications: <%= totalApplications %></p>
+    <p>Total First Interviews: <%= firstInterviews %></p>
+    <p>Total Final Interviews: <%= finalInterviews %></p>
+    <p>Total Offers: <%= offers %></p>
+    <p>Conversion Rate from Applications to First Interviews: <%= firstInterviewRate %>%</p>
+    <p>Conversion Rate from First Interviews to Final Interviews: <%= finalInterviewRate %>%</p>
+    <p>Conversion Rate from Final Interviews to Offers: <%= offerRate %>%</p>
+    <h2>Applications</h2>
+    <table>
+        <tr>
+            <th>Company</th>
+            <th>Role</th>
+            <th>Hiring Manager</th>
+            <th>Applied</th>
+            <th>First Interview</th>
+            <th>Final Interview</th>
+            <th>Offer</th>
+            <th>Status</th>
+            <th>Notes</th>
+            <th>Edit</th>
+        </tr>
+        <% applications.forEach(function(application) { %>
+            <tr>
+                <td><%= application.company %></td>
+                <td><%= application.role %></td>
+                <td><%= application.hiringManager %></td>
+                <td><%= application.applied ? 'Yes' : 'No' %></td>
+                <td><%= application.firstInterview ? 'Yes' : 'No' %></td>
+                <td><%= application.finalInterview ? 'Yes' : 'No' %></td>
+                <td><%= application.offer ? 'Yes' : 'No' %></td>
+                <td><%= application.status %></td>
+    
+                <td><%= application.notes %></td>
+                <td><a href="/edit/<%= application.id %>">Edit</a></td>
+            </tr>
+        <% }); %>
+    </table>
+    <a href="/create">Create New Record</a>
+    
+        <!-- Add a button to go back to the landing page -->
+        <button onclick="window.location.href='/';" style="margin-top: 20px;">Back to Landing Page</button>
+    
+    
+
+
+
+
+
+
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+</body>
+</html>
