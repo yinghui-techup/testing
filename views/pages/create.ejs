@@ -16,7 +16,7 @@
         <div>
             <br>
             <p></p>
-          <h1>Example headline.</h1>
+          <h1>Job tracker.</h1>
           <p>Some representative placeholder content for the first slide of the carousel.</p>
         </div>
     
@@ -44,28 +44,42 @@
           <div class="row mb-3">
             <label for="role" class="col-sm-2 col-form-label"> </label>
             <div class="col">
-              <input type="text" id="role" class="form-control" placeholder="Role" aria-label="First name" name="role" >
+              <input type="text" id="role" class="form-control" placeholder="Role" aria-label="First name" name="role" required>
             </div>
 
             <div class="col">
 
-            <select class="form-select" aria-label="Default select example" id="industry" name="industry">
-                
+            <select class="form-select" aria-label="Default select example" id="industry" name="industry" required>
+                      <!-- Placeholder option -->
+        <option value="" disabled selected>Choose industry</option>
+
                 <% industries.forEach(function(industry) { %>
                     <option value="<%= industry %>"><%= industry %></option>
                 <% }); %>
               
             </select>
             </div>
+
+            <div class="col">
+                <select class="form-select" aria-label="Default select example" id="source" name="source" required>
+                    <option value="" disabled selected>Choose source</option>
+                    <% sources.forEach(function(source) { %>
+                        <option value="<%= source %>"><%= source %></option>
+                    <% }); %>
+                </select>
+            </div>
+
+
+
           </div>
 
         <div class="row mb-3">
             <label for="status" class="col-sm-2 col-form-label">Status</label>
             <div class="col-sm-10">
-                <select class="form-select" aria-label="Default select example" id="status" name="status" >
-                    <option value="1">Ongoing</option>
-                    <option value="2">Rejected</option>
-                    <option value="3">Accepted</option>
+                <select class="form-select" aria-label="Default select example" id="status" name="status" required>
+                    <option value="Ongoing">Ongoing</option>
+                    <option value="Rejected">Rejected</option>
+                    <option value="Accepted">Accepted</option>
                 </select>
             </div>
         </div>
@@ -173,6 +187,47 @@
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const applied = document.getElementById('applied');
+            const firstInterview = document.getElementById('firstInterview');
+            const secondInterview = document.getElementById('secondInterview');
+            const finalInterview = document.getElementById('finalInterview');
+            const offer = document.getElementById('offer');
+        
+            // Function to check if all required checkboxes are checked
+            function areAllChecked(checkboxes) {
+                return checkboxes.every(ch => ch.checked);
+            }
+        
+            // Event listener for the Second Interview checkbox
+            secondInterview.addEventListener('change', function() {
+                if (this.checked && !areAllChecked([applied, firstInterview])) {
+                    alert("To select Second Interview, both Applied and First Interview must be selected.");
+                    this.checked = false;
+                }
+            });
+        
+            // Event listener for the Final Interview checkbox
+            finalInterview.addEventListener('change', function() {
+                if (this.checked && !areAllChecked([applied, firstInterview, secondInterview])) {
+                    alert("To select Final Interview, Applied, First Interview, and Second Interview must be selected.");
+                    this.checked = false;
+                }
+            });
+        
+            // Event listener for the Offer checkbox
+            offer.addEventListener('change', function() {
+                if (this.checked && !areAllChecked([applied, firstInterview, secondInterview, finalInterview])) {
+                    alert("To select Offer, all previous stages must be selected.");
+                    this.checked = false;
+                }
+            });
+        });
+        </script>
+        
 
 </body>
 </html>

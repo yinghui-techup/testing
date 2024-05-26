@@ -27,4 +27,6 @@ model JobApplication {
     finalInterview  Boolean  @default(false)
     offer           Boolean  @default(false)
     notes           String?
+    createdAt     DateTime @default(now())  // Automatically set to the current date and time when a record is created
+    source          String
 }

@@ -12,6 +12,10 @@
     <link rel="stylesheet" type="text/css" href="/dist/css/theme.min.css">
     <script src="/dist/js/funnel-graph.js"></script>
     
+<!--to make the table sortable-->
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+
 
 
     <title>Document</title>
@@ -29,42 +33,56 @@
           <h1>Job Application Tracker</h1>
           <p>Some representative placeholder content for the first slide of the carousel.</p>
         </div>
+        <a class="btn btn-lg btn-primary" href="/create">Create New Record</a>
 
-        <div class="row">
-            <div class="col-sm-6 mb-3 mb-sm-0">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="card-title">Statistics</h5>
-                    </div>
-                    <div class="card-body">
-                        <p>Total Applications: <%= totalApplications %></p>
-                        <p>Total First Interviews: <%= firstInterviews %></p>
-                        <p>Total Second Interviews: <%= secondInterviews %></p>
-                        <p>Total Final Interviews: <%= finalInterviews %></p>
-                        <p>Total Offers: <%= offers %></p>
+        <hr class="featurette-divider">
+
+        <div class="row featurette">
+            <div class="row">
+                <div class="col-sm-6 mb-3 mb-sm-0">
+                    <div class="card">
+                       
+                        <div class="card-body">
+                            <h5 class="card-title">Total Applications: <%= totalApplications %></h5>
+    
+                            <p>Total First Interviews: <%= firstInterviews %></p>
+                            <p>Total Second Interviews: <%= secondInterviews %></p>
+                            <p>Total Final Interviews: <%= finalInterviews %></p>
+                            <p>Total Offers: <%= offers %></p>
+                        </div>
                     </div>
                 </div>
+            <div class="col-sm-6">
+              <div class="card">
+             
+                <div class="card-body">
+                    <h5 class="card-title">Conversion rates</h5>
+    
+                    <p>from Applications to 1st Interviews: <%= firstInterviewRate %>%</p>
+                    <p>from 1st to 2nd Interviews: <%= secondInterviewRate %>%</p>
+                    <p>from 2nd to Final Interviews: <%= finalInterviewRate %>%</p>
+                    <p>from Final Interviews to Offers: <%= offerRate %>%</p>
+                </div>
             </div>
-        <div class="col-sm-6">
-          <div class="card">
-            <div class="card-header">
-                <h5 class="card-title">Conversion rates</h5>
             </div>
+        </div>
+    
+        <hr class="featurette-divider">
+
+        
             <div class="card-body">
-                <p>from Applications to First Interviews: <%= firstInterviewRate %>%</p>
-                <p>from First Interviews to Final Interviews: <%= finalInterviewRate %>%</p>
-                <p>from First Interviews to Final Interviews: <%= secondInterviewRate %>%</p>
-                <p>from Final Interviews to Offers: <%= offerRate %>%</p>
-            </div>
-        </div>
-        </div>
-
-
+            <h5 class="card-title">Pipeline Visualisation</h5>
 
             <div class="flex funnel-container">
                 <div class="funnel"></div>
-            </div>
-  
+
+         
+        </div>
+    </div>
+
+
+    <hr class="featurette-divider">
+
 
 
     <script>
@@ -81,11 +99,15 @@
                         ['#A0F9FF', '#7795FF']
                     ],
                     values: [
-                        [1200, 800, 400], // Total applications, first interviews, second interviews, etc.
-                        [300, 200, 100], // Adjust these numbers based on real data
-                        [1200, 800, 400], // Total applications, first interviews, second interviews, etc.
-                        [300, 200, 100], // Adjust these numbers based on real data
-                        [50, 30, 20]
+                        [Number(<%= totalApplications %>),10,5],
+                        [Number(<%= firstInterviews %>),7,3],
+                        [Number(<%= secondInterviews %>),4,2],
+                        [Number(<%= finalInterviews %>),3,0],
+                        [Number(<%= offers %>),1,0]
+
+                        //[1200, 800, 400], // Total applications, first interviews, second interviews, etc.
+                        //[300, 200, 100], // Adjust these numbers based on real data
+                        //[50, 30, 20]
                     ]
                 },
                 displayPercent: true,
@@ -175,9 +197,6 @@
         </div>
 
 
-    <a class="btn btn-lg btn-primary" href="/create">Create New Record</a>
-
-
     <!-- 
     <h2>Applications</h2>
     <table>
@@ -212,54 +231,96 @@
         <% }); %>
     </table> -->
 
-    <table class="table">
+    <table id="applicationsTable" class="display">
         <thead>
           <tr>
+            <th>Status</th>
             <th>Name</th>
             <th>Company</th>
-            <th>Role</th>
-            <th>Industry</th>
-            <th>Status</th>
+            <th>Role</th>            
             <th>Applied</th>
-            <th>First Interview</th>
-            <th>Second Interview</th>
+            <th>1st Interview</th>
+            <th>2nd Interview</th>
             <th>Final Interview</th>
             <th>Offer</th>
+            <th>Industry</th>
+            <th>Source</th>
             <th>Edit</th>
           </tr>
         </thead>
         <tbody>
             <% applications.forEach(function(application) { %>
                 <tr>
+                    <td><%= application.status %></td>
                     <td><%= application.name %></td>
                     <td><%= application.company %></td>
                     <td><%= application.role %></td>
-                    <td><%= application.industry %></td>
-                    <td><%= application.status %></td>
                     <td><%= application.applied ? 'Yes' : 'No' %></td>
-                    <td><%= application.firstInterview ? 'Yes' : 'No' %></td>
-                    <td><%= application.secondInterview ? 'Yes' : 'No' %></td>
-                    <td><%= application.finalInterview ? 'Yes' : 'No' %></td>
-                    <td><%= application.offer ? 'Yes' : 'No' %></td>
+                    <td><%= application.firstInterview ? 'Yes' : ' - ' %></td>
+                    <td><%= application.secondInterview ? 'Yes' : ' - ' %></td>
+                    <td><%= application.finalInterview ? 'Yes' : ' - ' %></td>
+                    <td><%= application.offer ? 'Yes' : ' - ' %></td>
+                    <td><%= application.industry %></td>
+
+                    <td><%= application.source %></td>  <!-- Display the source -->
+                    <!-- <td><%= new Date(application.createdAt).toLocaleString() %></td>  Display the created timestamp -->
                     <td><a href="/edit/<%= application.id %>">Edit</a></td>
                 </tr>
             <% }); %>
         </tbody>
       </table>
-
-
-         
-
 </div>
 
 
+      <!-- DataTables JS and its jQuery dependency 
+      <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+      <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+  
+        <script>
+              $(document).ready(function() {
+                  console.log("Initializing DataTables");
+                  $('#applicationsTable').DataTable();
+                  console.log("DataTables should be initialized now");
+              });
+          </script>
+          
 
 
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>-->
+
+
+<!-- Include only the full jQuery library -->
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+
+<!-- Bootstrap and other dependencies, if needed -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<!-- Your initialization script for DataTables -->
+<script>
+    $(document).ready(function() {
+        console.log("Initializing DataTables");
+        $('#applicationsTable').DataTable({
+            "order": [[0, 'desc']]  // Sort by the first column (ID) in descending order
+
+        });
+        console.log("DataTables should be initialized now");
+    });
+</script>
+
+<!-- Chart.js if needed -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+
+
 
 </body>
 </html>

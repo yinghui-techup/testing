@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const prisma = new PrismaClient();
 const app = express();
 const path = require('path');
-const fs = require('fs');
+const fs = require('fs').promises;
 
 
 app.set('view engine', 'ejs');
@@ -115,28 +115,32 @@ app.get('/job-tracker', async (req, res) => {
 //const industries = JSON.parse(fs.readFileSync(path.join(__dirname, 'data', 'industries.json'), 'utf8'));
 
 // Route to display the form
-app.get('/create', (req, res) => {
-    fs.readFile(path.join(__dirname, 'data', 'industries.json'), 'utf8', (err, data) => {
-        if (err) {
-            // Properly handle the error, maybe render an error page or send an error status
-            console.error("Failed to read industries file:", err);
-            res.status(500).send("Error loading page data.");
-            return;
-        }
-        const industries = JSON.parse(data).industries;
-        res.render('pages/create', { industries });
-    });
+app.get('/create', async (req, res) => {
+    try {
+        const industriesData = await fs.readFile(path.join(__dirname, 'data', 'industries.json'), 'utf8');
+        const sourcesData = await fs.readFile(path.join(__dirname, 'data', 'sources.json'), 'utf8');
+        
+        const industries = JSON.parse(industriesData).industries;
+        const sources = JSON.parse(sourcesData).sources;
+        
+        res.render('pages/create', { industries, sources });
+    } catch (err) {
+        // Properly handle the error, maybe render an error page or send an error status
+        console.error("Failed to read file:", err);
+        res.status(500).send("Error loading page data.");
+    }
 });
 
 
 app.post('/applications', async (req, res) => {
-    console.log(req.body);  // Log the full request body to see what is being submitted
+    console.log(req.body);  // Log to ensure all data is coming through
 
     const {
         name,
         company,
         role,
         industry,
+        source, // Make sure source is being captured
         status,
         applied,
         firstInterview,
@@ -146,6 +150,8 @@ app.post('/applications', async (req, res) => {
         notes
     } = req.body;
 
+    console.log('Source:', source); // Verify that source is being logged correctly
+
     try {
         await prisma.jobApplication.create({
             data: {
@@ -153,10 +159,11 @@ app.post('/applications', async (req, res) => {
                 company,
                 role,
                 industry,
+                source,  // Ensure this is included
                 status,
-                applied: applied === 'on',  // Checkboxes return 'on' if checked
+                applied: applied === 'on',  // Convert checkbox value
                 firstInterview: firstInterview === 'on',
-                secondInterview: secondInterview === 'on',
+                secondInterview: secondInterview === 'on' || false, // Handle potentially undefined values
                 finalInterview: finalInterview === 'on',
                 offer: offer === 'on',
                 notes
@@ -174,31 +181,88 @@ app.post('/applications', async (req, res) => {
 //------------------EDIT A RECORD------------------------------------------
 
 app.get('/edit/:id', async (req, res) => {
-    const application = await prisma.jobApplication.findUnique({
-        where: { id: parseInt(req.params.id) }
-    });
-    res.render('pages/edit', { application });
+    try {
+        const application = await prisma.jobApplication.findUnique({
+            where: { id: parseInt(req.params.id) }
+        });
+
+        if (!application) {
+            res.status(404).send('Application not found');
+            return;
+        }
+
+        // Paths to JSON files
+        const industriesPath = path.join(__dirname, 'data', 'industries.json');
+        const sourcesPath = path.join(__dirname, 'data', 'sources.json');
+
+        // Read both files asynchronously
+        const [industriesData, sourcesData] = await Promise.all([
+            fs.readFile(industriesPath, 'utf8'),
+            fs.readFile(sourcesPath, 'utf8')
+        ]);
+
+        // Parse data from files
+        const industries = JSON.parse(industriesData).industries;
+        const sources = JSON.parse(sourcesData).sources;
+
+        // Render the edit page with application, industries, and sources data
+        res.render('pages/edit', {
+            application,
+            industries,
+            sources
+        });
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        res.status(500).send('Server error');
+    }
 });
+
+
 
 app.post('/edit/:id', async (req, res) => {
     const { id } = req.params;
-    await prisma.jobApplication.update({
-        where: { id: parseInt(id) },
-        data: {
-            company: req.body.company,
-            role: req.body.role,
-            status: req.body.status, // Update status
+    const {
+        name,
+        company,
+        role,
+        industry,
+        source,
+        status,
+        applied,
+        firstInterview,
+        secondInterview,
+        finalInterview,
+        offer,
+        notes
+    } = req.body;
 
-            hiringManager: req.body.hiringManager,
-            applied: req.body.applied === 'on',
-            firstInterview: req.body.firstInterview === 'on',
-            finalInterview: req.body.finalInterview === 'on',
-            offer: req.body.offer === 'on',
-            notes: req.body.notes
-        }
-    });
-    res.redirect('/');
+    try {
+        await prisma.jobApplication.update({
+            where: { id: parseInt(id) },
+            data: {
+                name: name,
+                company: company,
+                role: role,
+                industry: industry,
+                source: source,
+                status: status,
+                applied: applied === 'on',
+                firstInterview: firstInterview === 'on',
+                secondInterview: secondInterview === 'on',
+                finalInterview: finalInterview === 'on',
+                offer: offer === 'on',
+                notes: notes
+            }
+        });
+        res.redirect('/job-tracker');  // Redirect to the index or listing page
+    } catch (error) {
+        console.error('Failed to update job application:', error);
+        res.status(500).send('Error updating job application');
+    }
 });
+
+
+
 /////////////////////END OF JOB TRACKING PORTION////////////////////////////////////////////////
 
 
@@ -211,6 +275,70 @@ app.post('/edit/:id', async (req, res) => {
 //////////GENAI: GENERATE INTERVIEW QUESTIONS AND ANSWERS///////////////////////////////////
 //------------------PROMPT TO GENERATE INTERVIEW QUESTIONS!----------------------------------------
 // Endpoint to generate questions
+
+app.post('/generate-questions', async (req, res) => {
+    const { role } = req.body;
+    const prompt = `Generate a concise overview for excelling in the role of ${role}. Provide the information within one paragraph only. Mark this section with "Role Advice Start:" and end it with "Role Advice End:".
+
+    List 2 interview questions focused on hard skills necessary for the role of ${role}. Mark this section with "Hard Skills Start:" and end it with "Hard Skills End:". Ensure each question is preceded by '## Question:' and each rationale is preceded by '## Rationale:'. Each question and rationale should be separated by a blank line.
+    
+    List 2 interview questions focused on soft skills necessary for the role of ${role}. Start this section with "Soft Skills Start:" and end it with "Soft Skills End:". Ensure each question is preceded by '## Question:' and each rationale is preceded by '## Rationale:'. Each question and rationale should be separated by a blank line.`;
+    
+    try {
+       /* const generationConfig = {
+            stopSequences: ["Role Advice End:", "Hard Skills End:", "Soft Skills End:"],
+            maxOutputTokens: 800,
+            temperature: 0.7,
+            topP: 0.9,
+            topK: 40,
+        };*/
+
+        const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash-latest'});
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const text = await response.text();
+
+        console.log('Raw API response text:', text);  // For debugging
+
+        const roleAdviceMatch = text.match(/Role Advice Start:(.*?)Role Advice End:/s);
+        const hardSkillsMatch = text.match(/Hard Skills Start:([\s\S]*?)Hard Skills End:/);
+        const softSkillsMatch = text.match(/Soft Skills Start:([\s\S]*?)Soft Skills End:/);
+
+        const roleAdvice = roleAdviceMatch ? roleAdviceMatch[1].trim().replace(/#\s*$/, '') : 'No advice available.';
+        const hardSkills = hardSkillsMatch ? parseQuestions(hardSkillsMatch[1].trim()) : [];
+        const softSkills = softSkillsMatch ? parseQuestions(softSkillsMatch[1].trim()) : [];
+
+        console.log('Hard Skills:', hardSkills);  // Debugging output
+        console.log('Soft Skills:', softSkills);  // Debugging output
+
+        res.json({
+            roleAdvice,
+            hardSkills,
+            softSkills
+        });
+    } catch (error) {
+        console.error("Error generating questions:", error);
+        res.status(500).json({ error: 'Failed to generate questions' });
+    }
+});
+
+function parseQuestions(text) {
+    // Trim unwanted trailing "#" and split by "## Question:"
+    return text.replace(/##\s*$/, '').split('## Question:').slice(1).map(question => {
+        // Split each question by "## Rationale:"
+        const parts = question.split('## Rationale:');
+        if (parts.length >= 2) {
+            return {
+                question: parts[0].trim(),
+                rationale: parts[1].trim() + "\n" // Adding a newline for spacing in the display.
+            };
+        }
+        return null; // In case the split does not yield two parts.
+    }).filter(q => q); // Filter out any null entries due to improper splits.
+}
+
+
+/*
 app.post('/generate-questions', async (req, res) => {
     const { role } = req.body;
     const prompt = `List 3 interview questions and their rationale for the role of ${role}. Ensure each question is preceded by '## Question:' and each rationale is preceded by '## Rationale:'. Each question and rationale should be separated by a blank line.`;
@@ -263,6 +391,11 @@ app.post('/generate-questions', async (req, res) => {
         res.status(500).json({ error: 'Failed to generate questions' });
     }
 });
+*/
+
+
+
+
 
 
 //----------PROMPT TO GENERATE STAR RESPONSE TO SPECFIC INTERVIEW QUESTIONS--------------------------------

@@ -11,52 +11,160 @@
 <body>
     <%- include('../partials/navbar') %> <!-- Include the navbar -->
 
+    <div class="container marketing">
 
+        <div>
+            <br>
+            <p></p>
+          <h1>Edit Job Application.</h1>
+          <p>Some representative placeholder content for the first slide of the carousel.</p>
+        </div>
 
-    <h1>Edit Job Application</h1>
+    <h1></h1>
     <form action="/edit/<%= application.id %>" method="POST">
-        <label for="company">Company:</label>
-        <input type="text" id="company" name="company" value="<%= application.company %>" required><br>
-
-        <label for="role">Role:</label>
-        <input type="text" id="role" name="role" value="<%= application.role %>" required><br>
-
-        <label for="hiringManager">Hiring Manager:</label>
-        <input type="text" id="hiringManager" name="hiringManager" value="<%= application.hiringManager %>"><br>
-
-        <label for="applied">Applied:</label>
-        <input type="checkbox" id="applied" name="applied" <%= application.applied ? 'checked' : '' %>><br>
-
-        <label for="firstInterview">First Interview:</label>
-        <input type="checkbox" id="firstInterview" name="firstInterview" <%= application.firstInterview ? 'checked' : '' %>><br>
-
-        <label for="finalInterview">Final Interview:</label>
-        <input type="checkbox" id="finalInterview" name="finalInterview" <%= application.finalInterview ? 'checked' : '' %>><br>
-
-        <label for="offer">Offer:</label>
-        <input type="checkbox" id="offer" name="offer" <%= application.offer ? 'checked' : '' %>><br>
-
-        <label for="status">Status:</label>
-        <select id="status" name="status">
-            <option value="Ongoing" <%= application.status === 'Ongoing' ? 'selected' : '' %>>Ongoing</option>
-            <option value="Rejected" <%= application.status === 'Rejected' ? 'selected' : '' %>>Rejected</option>
-            <option value="Accepted" <%= application.status === 'Accepted' ? 'selected' : '' %>>Accepted</option>
-        </select><br>
-        
-
-
-        <label for="notes">Notes:</label>
-        <textarea id="notes" name="notes"><%= application.notes %></textarea><br>
-
-        <button type="submit">Update</button>
+        <div class="row mb-3">
+            <label for="name" class="col-sm-2 col-form-label">Name</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="name" name="name" value="<%= application.name %>" required>
+            </div>
+        </div>
+    
+        <div class="row mb-3">
+            <label for="company" class="col-sm-2 col-form-label">Company</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="company" name="company" value="<%= application.company %>" required>
+            </div>
+        </div>
+    
+        <div class="row mb-3">
+            <label for="role" class="col-sm-2 col-form-label">Role</label>
+            <div class="col">
+                <input type="text" id="role" class="form-control" value="<%= application.role %>" name="role" required>
+            </div>
+    
+            <div class="col">
+                <select class="form-select" aria-label="Default select example" id="industry" name="industry" required>
+                    <% industries.forEach(function(industry) { %>
+                        <option value="<%= industry %>" <%= application.industry === industry ? 'selected' : '' %>><%= industry %></option>
+                    <% }); %>
+                </select>
+            </div>
+    
+            <div class="col">
+                <select class="form-select" aria-label="Default select example" id="source" name="source" required>
+                    <% sources.forEach(function(source) { %>
+                        <option value="<%= source %>" <%= application.source === source ? 'selected' : '' %>><%= source %></option>
+                    <% }); %>
+                </select>
+            </div>
+        </div>
+    
+        <div class="row mb-3">
+            <label for="status" class="col-sm-2 col-form-label">Status</label>
+            <div class="col-sm-10">
+                <select class="form-select" aria-label="Default select example" id="status" name="status" required>
+                    <option value="Ongoing" <%= application.status === 'Ongoing' ? 'selected' : '' %>>Ongoing</option>
+                    <option value="Rejected" <%= application.status === 'Rejected' ? 'selected' : '' %>>Rejected</option>
+                    <option value="Accepted" <%= application.status === 'Accepted' ? 'selected' : '' %>>Accepted</option>
+                </select>
+            </div>
+        </div>
+    
+        <div class="row mb-3">
+            <div class="col-sm-10 offset-sm-2">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="applied" name="applied" <%= application.applied ? 'checked' : '' %>>
+                    <label class="form-check-label" for="applied">
+                        Applied?
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="firstInterview" name="firstInterview" <%= application.firstInterview ? 'checked' : '' %>>
+                    <label class="form-check-label" for="firstInterview">
+                        First Interview?
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="secondInterview" name="secondInterview" <%= application.secondInterview ? 'checked' : '' %>>
+                    <label class="form-check-label" for="secondInterview">
+                        Second Interview?
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="finalInterview" name="finalInterview" <%= application.finalInterview ? 'checked' : '' %>>
+                    <label class="form-check-label" for="finalInterview">
+                        Final Interview?
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="offer" name="offer" <%= application.offer ? 'checked' : '' %>>
+                    <label class="form-check-label" for="offer">
+                        Offer?
+                    </label>
+                </div>
+            </div>
+        </div>
+    
+        <div class="row mb-3">
+            <label for="notes" class="col-sm-2 col-form-label">Notes</label>
+            <div class="col-sm-10">
+                <textarea class="form-control" id="notes" name="notes" style="height: 100px"><%= application.notes %></textarea>
+            </div>
+        </div>
+    
+        <button type="submit" class="btn btn-lg btn-primary">Submit</button>
     </form>
+    
+
     <a href="/">Back to list</a>
+
+    </div>
 
 
 
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const applied = document.getElementById('applied');
+        const firstInterview = document.getElementById('firstInterview');
+        const secondInterview = document.getElementById('secondInterview');
+        const finalInterview = document.getElementById('finalInterview');
+        const offer = document.getElementById('offer');
+    
+        // Function to check if all required checkboxes are checked
+        function areAllChecked(checkboxes) {
+            return checkboxes.every(ch => ch.checked);
+        }
+    
+        // Event listener for the Second Interview checkbox
+        secondInterview.addEventListener('change', function() {
+            if (this.checked && !areAllChecked([applied, firstInterview])) {
+                alert("To select Second Interview, both Applied and First Interview must be selected.");
+                this.checked = false;
+            }
+        });
+    
+        // Event listener for the Final Interview checkbox
+        finalInterview.addEventListener('change', function() {
+            if (this.checked && !areAllChecked([applied, firstInterview, secondInterview])) {
+                alert("To select Final Interview, Applied, First Interview, and Second Interview must be selected.");
+                this.checked = false;
+            }
+        });
+    
+        // Event listener for the Offer checkbox
+        offer.addEventListener('change', function() {
+            if (this.checked && !areAllChecked([applied, firstInterview, secondInterview, finalInterview])) {
+                alert("To select Offer, all previous stages must be selected.");
+                this.checked = false;
+            }
+        });
+    });
+    </script>
+    
+
 
 
 </body>
