@@ -476,7 +476,7 @@ app.post('/question-answer', async (req, res) => {
     console.log('Received question:', qnSpecific);
     console.log('Received answer:', ansSpecific);
 
-    const qnaprompt = `Given the following interview question and candidate's response, generate a STAR formatted answer. Ensure each part of STAR is clearly labeled.
+    const qnaprompt = `Given the following interview question and candidate's response, generate a STAR formatted answer. Ensure each part of STAR is clearly labeled and kept to one paragraph respectively.
     Interview Question: ${qnSpecific}
     Candidate's Response: ${ansSpecific}
     
@@ -537,7 +537,6 @@ function parseStarResponse(text) {
 
 
 
-///////////////////////////THIS IS TO CREATE FUNNEL VIEW///////////////
 
 
 

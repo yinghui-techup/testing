@@ -18,9 +18,13 @@
     <!-- DataTables CSS -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
 
+    <style>
+        .extra-padding {
+            margin-bottom: 30px;
+        }
+    </style>
 
-
-    <title>Document</title>
+    <title>Betterhop | Application Tracker</title>
 </head>
 
 
@@ -29,15 +33,24 @@
 <body>
     <%- include('../partials/navbar') %> <!-- Include the navbar -->
         <div class="container marketing">
-            <div>
-                <br>
-                <p></p>
-                <h1>Job Application Tracker</h1>
-                <p>Some representative placeholder content for the first slide of the carousel.</p>
+
+            <div class="col-md-7">
+                <h1 class="featurette-heading fw-normal lh-1">Job Application Tracker<span
+                        class="text-body-secondary"></span></h1>
+                <p class="lead">Keep track of your job applications effortlessly. Monitor the number of applications
+                    sent, their current status, and analyze your conversion rates. Stay organized and informed every
+                    step of the way.</p>
             </div>
-            <a class="btn btn-lg btn-primary" href="/create">Create New Record</a>
+
+            <a class="btn btn-primary" href="/create">Create New Record</a>
 
             <hr class="featurette-divider">
+
+            <div class="col-md-5 extra-padding">
+                <h2>Dashboard</h2>
+                <p> Tracking these numbers helps you identify trends and optimize your job search strategy for better
+                    results.</p>
+            </div>
 
             <div class="row featurette">
                 <div class="row">
@@ -74,11 +87,18 @@
                     </div>
                 </div>
 
-                <hr class="featurette-divider">
+                <div class="extra-padding"></div>
 
 
-                <div class="card-body">
-                    <h5 class="card-title">Pipeline Visualisation</h5>
+
+                <div class="col-md-5 extra-padding">
+                    <h2>Funnel Chart</h2>
+                    <p>Visualize your application numbers and conversion rates.</p>
+                </div>
+
+
+                <div class="extra-padding">
+
 
                     <div class="flex funnel-container">
                         <div class="funnel"></div>
@@ -87,8 +107,10 @@
                     </div>
                 </div>
 
-
-                <hr class="featurette-divider">
+                <div class="col-md-5 extra-padding">
+                    <h2>All Applications</h2>
+                    <p>Track all records to easily monitor progress, statuses, and outcomes.</p>
+                </div>
 
 
 
@@ -99,7 +121,7 @@
                             gradientDirection: 'horizontal',
                             data: {
                                 labels: ['Applications', 'First Interviews', 'Second Interviews', 'Final Interviews', 'Offers'],
-                                subLabels: ['Direct', 'Referral', 'Ads'],
+                                subLabels: ['myCareerFuture', 'Company portal', 'Others'],
                                 colors: [
                                     ['#FFB178', '#FF78B1', '#FF3C8E'],
                                     ['#A0BBFF', '#EC77FF'],
@@ -126,117 +148,9 @@
                     });
                 </script>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                <!--   <div>
-        <canvas id="funnelChart"></canvas>
-    </div>
-    
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const ctx = document.getElementById('funnelChart').getContext('2d');
-        const funnelChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: [
-                    'Applications to First Interviews', 
-                    'First to Second Interviews', 
-                    'Second to Final Interviews', 
-                    'Final Interviews to Offers'
-                ],
-                datasets: [{
-                    label: 'Conversion Rates (%)',
-                    data: [
-                        <%= firstInterviewRate %>, 
-                        <%= secondInterviewRate %>, 
-                        <%= finalInterviewRate %>, 
-                        <%= offerRate %>
-                    ],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.6)',
-                        'rgba(54, 162, 235, 0.6)',
-                        'rgba(255, 206, 86, 0.6)',
-                        'rgba(75, 192, 192, 0.6)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        suggestedMax: 100  // Set a max value for the y-axis to represent percentage
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: true
-                    }
-                }
-            }
-        });
-    });
-    </script>-->
-
-
             </div>
 
 
-            <!-- 
-    <h2>Applications</h2>
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Company</th>
-            <th>Role</th>
-            <th>Industry</th>
-            <th>Status</th>
-            <th>Applied</th>
-            <th>First Interview</th>
-            <th>Second Interview</th>
-            <th>Final Interview</th>
-            <th>Offer</th>
-            <th>Notes</th>
-            <th>Edit</th>
-        </tr>
-        <% applications.forEach(function(application) { %>
-            <tr>
-                <td><%= application.name %></td>
-                <td><%= application.company %></td>
-                <td><%= application.role %></td>
-                <td><%= application.industry %></td>
-                <td><%= application.status %></td>
-                <td><%= application.applied ? 'Yes' : 'No' %></td>
-                <td><%= application.firstInterview ? 'Yes' : 'No' %></td>
-                <td><%= application.secondInterview ? 'Yes' : 'No' %></td>
-                <td><%= application.finalInterview ? 'Yes' : 'No' %></td>
-                <td><%= application.offer ? 'Yes' : 'No' %></td>
-                <td><a href="/edit/<%= application.id %>">Edit</a></td>
-            </tr>
-        <% }); %>
-    </table> -->
 
             <table id="applicationsTable" class="display">
                 <thead>
@@ -245,14 +159,13 @@
                         <th>Name</th>
                         <th>Company</th>
                         <th>Role</th>
-                        <th>Applied</th>
+
                         <th>1st Interview</th>
                         <th>2nd Interview</th>
                         <th>Final Interview</th>
                         <th>Offer</th>
-                        <th>Industry</th>
                         <th>Source</th>
-                        <th>Edit</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -270,9 +183,7 @@
                             <td>
                                 <%= application.role %>
                             </td>
-                            <td>
-                                <%= application.applied ? 'Yes' : 'No' %>
-                            </td>
+
                             <td>
                                 <%= application.firstInterview ? 'Yes' : ' - ' %>
                             </td>
@@ -284,9 +195,6 @@
                             </td>
                             <td>
                                 <%= application.offer ? 'Yes' : ' - ' %>
-                            </td>
-                            <td>
-                                <%= application.industry %>
                             </td>
 
                             <td>
@@ -301,25 +209,7 @@
         </div>
 
 
-        <!-- DataTables JS and its jQuery dependency 
-      <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
-      <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
-  
-        <script>
-              $(document).ready(function() {
-                  console.log("Initializing DataTables");
-                  $('#applicationsTable').DataTable();
-                  console.log("DataTables should be initialized now");
-              });
-          </script>
-          
 
-
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>-->
 
 
         <!-- Include only the full jQuery library -->

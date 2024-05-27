@@ -32,7 +32,9 @@ body {
   background-size: cover;
 }
 
-
+.extra-padding {
+  margin-bottom: 30px;
+}
 
 /* MARKETING CONTENT
 -------------------------------------------------- */
