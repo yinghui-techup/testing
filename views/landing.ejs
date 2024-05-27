@@ -21,6 +21,9 @@
 
 
   <style>
+
+
+
     .bd-placeholder-img {
       font-size: 1.125rem;
       text-anchor: middle;
@@ -96,6 +99,17 @@
 
     .bd-mode-toggle .dropdown-menu .active .bi {
       display: block !important;
+    }
+
+    .overlay-imgae{
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      top:0;
+      background-position: center;
+      background-size: cover;
+      opacity: 0.8;
     }
   </style>
 
@@ -228,12 +242,29 @@
           <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
         </div>
         <div class="carousel-inner">
-          <div class="carousel-item active">
-            <picture>
-              <source media="(max-width: 768px)" srcset="/images/right768.png">
-              <source media="(max-width: 1024px)" srcset="/images/right1024.png">
-              <img src="/images/right1920.png" class="d-block w-100" alt="First slide">
-            </picture>
+           <!-- <div class="carousel-inner">
+              <div class="carousel-item active" style="background-image:url(/images/right1080.png);">
+                <div class="container">
+                  <h1>testing</h1>
+
+                </div>
+
+              </div>
+
+            </div> -->
+
+          <div class="carousel-item active" >
+            <div class="overlay-imgae" style="background-image:url(/images/right1080.png);">
+              
+            </div>
+
+          <!--     <picture>
+            <source media="(max-width: 768px)" srcset="/images/right768.png">
+              <source media="(max-width: 1024px)" srcset="/images/right1024.png"> 
+            </picture> 
+              <img src="/images/right1024.png" class="d-block w-100 img-fluid" alt="First slide"
+              sccset="/images/right768.png 500w, /images/right1920.png 2000w" sizes="(max-width: 768px) 500px, (max-width: 1200px) 2000px"> -->
+            
             <div class="container">
               <div class="carousel-caption text-start">
                 <h1>Launch Your Career Sky-High with BetterHop</h1>
@@ -242,12 +273,12 @@
               </div>
             </div>
           </div>
-          <div class="carousel-item">
-            <picture>
-              <source media="(max-width: 768px)" srcset="/images/middle768.png">
-              <source media="(max-width: 1024px)" srcset="/images/middle1024.png">
-              <img src="/images/middle1920.png" class="d-block w-100" alt="second slide">
-            </picture>
+
+
+
+          <div class="carousel-item" >
+            <div class="overlay-imgae" style="background-image:url(/images/middle1080.png);"></div>
+
             <div class="container">
               <div class="carousel-caption">
                 <h1>Another example headline.</h1>
@@ -256,15 +287,13 @@
               </div>
             </div>
           </div>
-          <div class="carousel-item">
-            <picture>
-              <source media="(max-width: 768px)" srcset="/images/left768.png">
-              <source media="(max-width: 1024px)" srcset="/images/left1024.png">
-              <img src="/images/left1920.png" class="d-block w-100" alt="First slide">
-            </picture>
-            <!-- 
-        <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="var(--bs-secondary-color)"/></svg>-->
-            <div class="container">
+
+
+
+          <div class="carousel-item" >
+            <div class="overlay-imgae" style="background-image:url(/images/left1080.png);"></div>
+
+          <div class="container">
               <div class="carousel-caption text-end">
                 <h1>One more for good measure.</h1>
                 <p>Some representative placeholder content for the third slide of this carousel.</p>
@@ -304,7 +333,7 @@
             <img src="/images/1.png" class="bd-placeholder-img rounded-circle" width="140" height="140" role="img"
               aria-label="Placeholder" alt="Placeholder">
             <h2 class="fw-normal">Killer Resume</h2>
-            <p>Unlock career opportunities with AI-powered CV generator, crafting compelling resumes that showcase your
+            <p>Unlock career opportunities by crafting compelling resumes that showcase your
               achievements.</p>
             <p><a class="btn btn-secondary">Coming Soon &raquo;</a></p>
 
@@ -314,7 +343,7 @@
               aria-label="Placeholder" alt="Placeholder">
             <h2 class="fw-normal">Interview Well</h2>
             <p>Land your dream job with role-specific interview questions and expert STAR response coaching.</p>
-            <p><a class="btn btn-secondary" onclick="window.location.href='/interviews';">Go to interview qn generator
+            <p><a class="btn btn-lg btn-primary"  onclick="window.location.href='/interviews';">Go to interview qn generator
                 &raquo;</a></p>
             <!--  <button onclick="window.location.href='/interviews';">Go to interview qn generator</button>-->
 
@@ -326,7 +355,7 @@
             <h2 class="fw-normal">Track Success</h2>
             <p>Streamline your job hunt with application tracking, status updates, and insightful analytics on
               conversion rates.</p>
-            <p><a class="btn btn-secondary" onclick="window.location.href='/job-tracker';">Go to Job Application Tracker
+            <p><a class="btn btn-lg btn-primary" onclick="window.location.href='/job-tracker';">Go to Job Application Tracker
                 &raquo;</a></p>
             <!--  <button onclick="window.location.href='/job-tracker';">Go to Job Application Tracker</button> -->
           </div><!-- /.col-lg-4 -->

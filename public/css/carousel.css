@@ -25,7 +25,13 @@ body {
 /* Declare heights because of positioning of img element */
 .carousel-item {
   height: 32rem;
+  background: #000;
+  color: white;
+  position: relative;
+  background-position: center;
+  background-size: cover;
 }
+
 
 
 /* MARKETING CONTENT
