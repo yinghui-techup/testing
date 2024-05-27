@@ -61,6 +61,9 @@ app.get('/index', (req, res) => {
 //});
 
 
+app.get('/about',(req,res)=>{
+    res.render('pages/about');
+});
 
 
 

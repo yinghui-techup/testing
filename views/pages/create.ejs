@@ -1,33 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link href="/css/carousel.css" rel="stylesheet">
-    <title>Create New Job Application</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="/css/carousel.css" rel="stylesheet">
+  <title>Create New Job Application</title>
 </head>
+
 <body>
-    <%- include('../partials/navbar') %> <!-- Include the navbar -->
+  <%- include('../partials/navbar') %> <!-- Include the navbar -->
 
     <main>
-        <div class="container marketing">
+      <div class="container marketing">
 
         <div>
-            <br>
-            <p></p>
+          <br>
+          <p></p>
           <h1>Job Application Tracker</h1>
           <p>Create a record whenever you submit your resume to the hiring company.</p>
         </div>
-    
 
 
 
 
 
-    <form action="/applications" method="POST">
- 
-        <div class="row mb-3">
+
+        <form action="/applications" method="POST">
+
+          <div class="row mb-3">
             <label for="name" class="col-sm-2 col-form-label" aria-placeholder="test">Name</label>
             <div class="col-sm-10">
               <input type="text" class="form-control" id="name" name="name" required>
@@ -37,69 +40,74 @@
           <div class="row mb-3">
             <label for="company" class="col-sm-2 col-form-label">Hiring Company</label>
             <div class="col-sm-10">
-              <input type="text" class="form-control" id="company" name="company"   required>
+              <input type="text" class="form-control" id="company" name="company" required>
             </div>
           </div>
 
           <div class="row mb-3">
             <label for="role" class="col-sm-2 col-form-label"> </label>
             <div class="col">
-              <input type="text" id="role" class="form-control" placeholder="Role" aria-label="First name" name="role" required>
+              <input type="text" id="role" class="form-control" placeholder="Role" aria-label="First name" name="role"
+                required>
             </div>
 
             <div class="col">
 
-            <select class="form-select" aria-label="Default select example" id="industry" name="industry" required>
-                      <!-- Placeholder option -->
-        <option value="" disabled selected>Choose industry</option>
+              <select class="form-select" aria-label="Default select example" id="industry" name="industry" required>
+                <!-- Placeholder option -->
+                <option value="" disabled selected>Choose industry</option>
 
                 <% industries.forEach(function(industry) { %>
-                    <option value="<%= industry %>"><%= industry %></option>
-                <% }); %>
-              
-            </select>
+                  <option value="<%= industry %>">
+                    <%= industry %>
+                  </option>
+                  <% }); %>
+
+              </select>
             </div>
 
             <div class="col">
-                <select class="form-select" aria-label="Default select example" id="source" name="source" required>
-                    <option value="" disabled selected>Choose source</option>
-                    <% sources.forEach(function(source) { %>
-                        <option value="<%= source %>"><%= source %></option>
-                    <% }); %>
-                </select>
+              <select class="form-select" aria-label="Default select example" id="source" name="source" required>
+                <option value="" disabled selected>Choose source</option>
+                <% sources.forEach(function(source) { %>
+                  <option value="<%= source %>">
+                    <%= source %>
+                  </option>
+                  <% }); %>
+              </select>
             </div>
 
 
 
           </div>
 
-        <div class="row mb-3">
+          <div class="row mb-3">
             <label for="status" class="col-sm-2 col-form-label">Status</label>
             <div class="col-sm-10">
-                <select class="form-select" aria-label="Default select example" id="status" name="status" required>
-                    <option value="Ongoing">Ongoing</option>
-                    <option value="Rejected">Rejected</option>
-                    <option value="Accepted">Accepted</option>
-                </select>
+              <select class="form-select" aria-label="Default select example" id="status" name="status" required>
+                <option value="Ongoing">Ongoing</option>
+                <option value="Rejected">Rejected</option>
+                <option value="Accepted">Accepted</option>
+              </select>
             </div>
-        </div>
+          </div>
 
-        <div class="row mb-3">
-          <div class="col-sm-10 offset-sm-2">
-            <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="applied" name="applied" >
-              <label class="form-check-label" for="gridCheck1">
-                Applied?
-              </label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="firstInterview" name="firstInterview" >
+          <div class="row mb-3">
+            <div class="col-sm-10 offset-sm-2">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="applied" name="applied">
+                <label class="form-check-label" for="gridCheck1">
+                  Applied?
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="firstInterview" name="firstInterview">
                 <label class="form-check-label" for="gridCheck2">
                   First Interview?
                 </label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="secondInterview" name="secondInterview" >
+                <input class="form-check-input" type="checkbox" id="secondInterview" name="secondInterview">
                 <label class="form-check-label" for="gridCheck3">
                   Second Interview?
                 </label>
@@ -111,27 +119,28 @@
                 </label>
               </div>
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="offer" name="offer" >
+                <input class="form-check-input" type="checkbox" id="offer" name="offer">
                 <label class="form-check-label" for="gridCheck5">
                   Offer?
                 </label>
               </div>
+            </div>
           </div>
-        </div>
 
-        <div class="row mb-3">
+          <div class="row mb-3">
             <label for="inputPassword3" class="col-sm-2 col-form-label">Notes</label>
             <div class="col-sm-10">
-              <textarea class="form-control" placeholder="Leave a comment here" id="notes" name="notes" style="height: 100px"></textarea>
+              <textarea class="form-control" placeholder="Leave a comment here" id="notes" name="notes"
+                style="height: 100px"></textarea>
+            </div>
           </div>
-        </div>
-        <button type="submit" class="btn btn-lg btn-primary" >Submit</button>
-  
-    </form>
+          <button type="submit" class="btn btn-lg btn-primary">Submit</button>
+
+        </form>
 
 
 
-       <!-- <label for="company">Company:</label>
+        <!-- <label for="company">Company:</label>
        // <input type="text" id="company" name="company" required><br>
     
         <div class="row mb-3">
@@ -179,9 +188,9 @@
         <button type="submit">Submit</button>
     </form>
     <a href="/">Back to list</a>
-        --> 
+        -->
 
-    </div>
+      </div>
     </main>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
@@ -190,44 +199,45 @@
 
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const applied = document.getElementById('applied');
-            const firstInterview = document.getElementById('firstInterview');
-            const secondInterview = document.getElementById('secondInterview');
-            const finalInterview = document.getElementById('finalInterview');
-            const offer = document.getElementById('offer');
-        
-            // Function to check if all required checkboxes are checked
-            function areAllChecked(checkboxes) {
-                return checkboxes.every(ch => ch.checked);
-            }
-        
-            // Event listener for the Second Interview checkbox
-            secondInterview.addEventListener('change', function() {
-                if (this.checked && !areAllChecked([applied, firstInterview])) {
-                    alert("To select Second Interview, both Applied and First Interview must be selected.");
-                    this.checked = false;
-                }
-            });
-        
-            // Event listener for the Final Interview checkbox
-            finalInterview.addEventListener('change', function() {
-                if (this.checked && !areAllChecked([applied, firstInterview, secondInterview])) {
-                    alert("To select Final Interview, Applied, First Interview, and Second Interview must be selected.");
-                    this.checked = false;
-                }
-            });
-        
-            // Event listener for the Offer checkbox
-            offer.addEventListener('change', function() {
-                if (this.checked && !areAllChecked([applied, firstInterview, secondInterview, finalInterview])) {
-                    alert("To select Offer, all previous stages must be selected.");
-                    this.checked = false;
-                }
-            });
+      document.addEventListener('DOMContentLoaded', function () {
+        const applied = document.getElementById('applied');
+        const firstInterview = document.getElementById('firstInterview');
+        const secondInterview = document.getElementById('secondInterview');
+        const finalInterview = document.getElementById('finalInterview');
+        const offer = document.getElementById('offer');
+
+        // Function to check if all required checkboxes are checked
+        function areAllChecked(checkboxes) {
+          return checkboxes.every(ch => ch.checked);
+        }
+
+        // Event listener for the Second Interview checkbox
+        secondInterview.addEventListener('change', function () {
+          if (this.checked && !areAllChecked([applied, firstInterview])) {
+            alert("To select Second Interview, both Applied and First Interview must be selected.");
+            this.checked = false;
+          }
         });
-        </script>
-        
+
+        // Event listener for the Final Interview checkbox
+        finalInterview.addEventListener('change', function () {
+          if (this.checked && !areAllChecked([applied, firstInterview, secondInterview])) {
+            alert("To select Final Interview, Applied, First Interview, and Second Interview must be selected.");
+            this.checked = false;
+          }
+        });
+
+        // Event listener for the Offer checkbox
+        offer.addEventListener('change', function () {
+          if (this.checked && !areAllChecked([applied, firstInterview, secondInterview, finalInterview])) {
+            alert("To select Offer, all previous stages must be selected.");
+            this.checked = false;
+          }
+        });
+      });
+    </script>
+
 
 </body>
+
 </html>
