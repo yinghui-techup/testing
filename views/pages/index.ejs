@@ -139,7 +139,7 @@
                             gradientDirection: 'horizontal',
                             data: {
                                 labels: ['Applications', 'First Interviews', 'Second Interviews', 'Final Interviews', 'Offers'],
-                                subLabels: ['myCareerFuture', 'Company portal', 'Others'],
+                                subLabels: ['TotalApp', 'ForRef1', 'ForRef2'],
                                 colors: [
                                     ['#FFB178', '#FF78B1', '#FF3C8E'],
                                     ['#A0BBFF', '#EC77FF'],
@@ -183,6 +183,8 @@
                         <th>Final Interview</th>
                         <th>Offer</th>
                         <th>Source</th>
+                        <th>Date Created</th>
+
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -218,7 +220,7 @@
                             <td>
                                 <%= application.source %>
                             </td> <!-- Display the source -->
-                            <!-- <td><%= new Date(application.createdAt).toLocaleString() %></td>  Display the created timestamp -->
+                            <td><%= new Date(application.createdAt).toLocaleDateString() %></td>   
                             <td><a href="/edit/<%= application.id %>">Edit</a></td>
                         </tr>
                         <% }); %>
@@ -257,7 +259,7 @@
                 console.log("Initializing DataTables");
                 $('#applicationsTable').DataTable({
                     "responsive": true,  // Enable responsive extension
-                    "order": [[0, 'desc']]  // Sort by the first column (ID) in descending order
+                    "order": [[9, 'desc']]  // Sort by the first column (ID) in descending order
 
                 });
                 console.log("DataTables should be initialized now");

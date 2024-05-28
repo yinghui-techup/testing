@@ -84,10 +84,10 @@ app.get('/job-tracker', async (req, res) => {
     const finalInterviews = applications.filter(a => a.finalInterview).length;
     const offers = applications.filter(a => a.offer).length;
     
-    const firstInterviewRate = totalApplications > 0 ? (firstInterviews / totalApplications * 100).toFixed(2) : "0.00";
-    const secondInterviewRate = firstInterviews > 0 ? (secondInterviews / firstInterviews * 100).toFixed(2) : "0.00";
-    const finalInterviewRate = secondInterviews > 0 ? (finalInterviews / secondInterviews * 100).toFixed(2) : "0.00";
-    const offerRate = finalInterviews > 0 ? (offers / finalInterviews * 100).toFixed(2) : "0.00";
+    const firstInterviewRate = totalApplications > 0 ? (firstInterviews / totalApplications * 100).toFixed(0) : "0";
+    const secondInterviewRate = firstInterviews > 0 ? (secondInterviews / firstInterviews * 100).toFixed(0) : "0";
+    const finalInterviewRate = secondInterviews > 0 ? (finalInterviews / secondInterviews * 100).toFixed(0) : "0";
+    const offerRate = finalInterviews > 0 ? (offers / finalInterviews * 100).toFixed(0) : "0";
     
 
 
