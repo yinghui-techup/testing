@@ -102,7 +102,8 @@ app.get('/job-tracker', async (req, res) => {
         firstInterviewRate,
         secondInterviewRate,
         finalInterviewRate,
-        offerRate
+        offerRate,
+
     });
 });
 
@@ -405,11 +406,60 @@ function parseStarResponse(text) {
 
 
 
+//const { GoogleGenerativeAI } = require("@google/generative-ai");
+
+// Initialize the Google Generative AI client with your API key
+//const genAI = new GoogleGenerativeAI(process.env.API_KEY);
+
+async function generateCareerAdvice(totalApplications, firstInterviews, secondInterviews, finalInterviews, offers, firstInterviewRate, secondInterviewRate, finalInterviewRate, offerRate) {
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+    const prompt = `Based on the jobseeker's data:
+    Total Applications: ${totalApplications}
+    Total First Interviews: ${firstInterviews}
+    Total Second Interviews: ${secondInterviews}
+    Total Final Interviews: ${finalInterviews}
+    Total Offers: ${offers}
+    Conversion rates are:
+    from Applications to 1st Interviews: ${firstInterviewRate}%
+    from 1st to 2nd Interviews: ${secondInterviewRate}%
+    from 2nd to Final Interviews: ${finalInterviewRate}%
+    from Final Interviews to Offers: ${offerRate}%
+
+    Identify the key area that needs improvement. Provide concise career advice, speaking directly to the jobseeker, focusing on how to enhance their chances based on these statistics. Limit your response to less than 45 words."
+
+`;
+
+    try {
+        const result = await model.generateContent(prompt);
+        const response = await result.response;
+        const advice = await response.text();
+        return advice;
+    } catch (error) {
+        console.error('Error generating career advice with Google Generative AI:', error);
+        return 'Failed to generate advice due to an error.';
+    }
+}
 
 
+// POST endpoint for generating and returning career advice
+app.post('/generate-advice', async (req, res) => {
+    const applications = await prisma.jobApplication.findMany();
 
+    const totalApplications = applications.length;
+    const firstInterviews = applications.filter(a => a.firstInterview).length;
+    const secondInterviews = applications.filter(a => a.secondInterview).length;
+    const finalInterviews = applications.filter(a => a.finalInterview).length;
+    const offers = applications.filter(a => a.offer).length;
+    
+    const firstInterviewRate = totalApplications > 0 ? (firstInterviews / totalApplications * 100).toFixed(0) : "0";
+    const secondInterviewRate = firstInterviews > 0 ? (secondInterviews / firstInterviews * 100).toFixed(0) : "0";
+    const finalInterviewRate = secondInterviews > 0 ? (finalInterviews / secondInterviews * 100).toFixed(0) : "0";
+    const offerRate = finalInterviews > 0 ? (offers / finalInterviews * 100).toFixed(0) : "0";
 
+    const careerAdvice = await generateCareerAdvice(totalApplications, firstInterviews, secondInterviews, finalInterviews, offers, firstInterviewRate, secondInterviewRate, finalInterviewRate, offerRate);
 
-
+    res.json({ careerAdvice });
+});
 
 

@@ -18,7 +18,8 @@
     <!-- DataTables CSS -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
 
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
     <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js" defer></script>
 
 
@@ -26,20 +27,49 @@
         .extra-padding {
             margin-bottom: 30px;
         }
+
+        .tiny-padding {
+            margin-top: 5px;
+        }
+
+        /* Ensure all cards have the same height */
+        .careercard .card {
+            height: 300px;
+            margin-bottom: 10px;
+        }
+
+        /* Ensure the button stretches across the entire width of the card */
+        #generateAdviceButton .btn {
+            width: 100%;
+        }
+
+        /* Maintain the height of the last card even when populated with text */
+        #generateAdviceButton .card-body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+        }
+
+        #generateAdviceButton #adviceOutput {
+            flex-grow: 1;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
     </style>
 
     <title>Betterhop | Application Tracker</title>
 
 
     <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-RQDM8MHQER"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RQDM8MHQER"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
 
-  gtag('config', 'G-RQDM8MHQER');
-</script>
+        gtag('config', 'G-RQDM8MHQER');
+    </script>
 
 
 </head>
@@ -70,162 +100,200 @@
                     results.</p>
             </div>
 
+
+
+
+
+
             <div class="row featurette">
-                <div class="row">
-                    <div class="col-sm-6 mb-3 mb-sm-0">
-                        <div class="card">
 
-                            <div class="card-body">
-                                <h5 class="card-title">Total Applications: <%= totalApplications %>
-                                </h5>
+                <div class="container ">
+                    <div class="row align-items-center">
+                        <div class="col-sm-4 careercard">
 
-                                <p>Total First Interviews: <%= firstInterviews %>
-                                </p>
-                                <p>Total Second Interviews: <%= secondInterviews %>
-                                </p>
-                                <p>Total Final Interviews: <%= finalInterviews %>
-                                </p>
-                                <p>Total Offers: <%= offers %>
-                                </p>
+                            <div class="card h-100">
+
+                                <div class="card-body">
+                                    <h5 class="card-title">Total Applications: <%= totalApplications %>
+                                    </h5>
+
+                                    <p>Total First Interviews: <%= firstInterviews %>
+                                    </p>
+                                    <p>Total Second Interviews: <%= secondInterviews %>
+                                    </p>
+                                    <p>Total Final Interviews: <%= finalInterviews %>
+                                    </p>
+                                    <p>Total Offers: <%= offers %>
+                                    </p>
+                                </div>
                             </div>
+
+
+                        </div>
+                        <div class="col-sm-4 careercard">
+
+
+                            <div class="card h-100">
+
+                                <div class="card-body">
+                                    <h5 class="card-title">Conversion rates</h5>
+
+                                    <p>from Applications to 1st Interviews: <%= firstInterviewRate %>%</p>
+                                    <p>from 1st to 2nd Interviews: <%= secondInterviewRate %>%</p>
+                                    <p>from 2nd to Final Interviews: <%= finalInterviewRate %>%</p>
+                                    <p>from Final Interviews to Offers: <%= offerRate %>%</p>
+
+                                </div>
+                            </div>
+
+
+
+                        </div>
+                        <div class="col-sm-4 careercard">
+
+                            <div class="card h-100">
+
+                                <div class="card-body ">
+                                    <button class="btn btn-primary" id="generateAdviceButton">Click here for your AI
+                                        Coach</button>
+                                    <div class="tiny-padding" id="adviceOutput"></div>
+                                </div>
+                            </div>
+
+
+
                         </div>
                     </div>
-                    <div class="col-sm-6">
-                        <div class="card">
-
-                            <div class="card-body">
-                                <h5 class="card-title">Conversion rates</h5>
-
-                                <p>from Applications to 1st Interviews: <%= firstInterviewRate %>%</p>
-                                <p>from 1st to 2nd Interviews: <%= secondInterviewRate %>%</p>
-                                <p>from 2nd to Final Interviews: <%= finalInterviewRate %>%</p>
-                                <p>from Final Interviews to Offers: <%= offerRate %>%</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="extra-padding"></div>
-
-
-
-                <div class="col-md-5 extra-padding">
-                    <h2>Funnel Chart</h2>
-                    <p>Visualize your application numbers and conversion rates.</p>
-                </div>
-
-
-                <div class="extra-padding">
-
-
-                    <div class="flex funnel-container">
-                        <div class="funnel"></div>
-
-
-                    </div>
-                </div>
-
-                <div class="col-md-5 extra-padding">
-                    <h2>All Applications</h2>
-                    <p>Track all records to easily monitor progress, statuses, and outcomes.</p>
                 </div>
 
 
 
-                <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        var graph = new FunnelGraph({
-                            container: '.funnel',
-                            gradientDirection: 'horizontal',
-                            data: {
-                                labels: ['Applications', 'First Interviews', 'Second Interviews', 'Final Interviews', 'Offers'],
-                                subLabels: ['TotalApp', 'ForRef1', 'ForRef2'],
-                                colors: [
-                                    ['#FFB178', '#FF78B1', '#FF3C8E'],
-                                    ['#A0BBFF', '#EC77FF'],
-                                    ['#A0F9FF', '#7795FF']
-                                ],
-                                values: [
-                                    [Number(<%= totalApplications %>), 10, 5],
-                                    [Number(<%= firstInterviews %>), 7, 3],
-                                    [Number(<%= secondInterviews %>), 4, 2],
-                                    [Number(<%= finalInterviews %>), 3, 0],
-                                    [Number(<%= offers %>), 1, 0]
+            </div>
 
-                                    //[1200, 800, 400], // Total applications, first interviews, second interviews, etc.
-                                    //[300, 200, 100], // Adjust these numbers based on real data
-                                    //[50, 30, 20]
-                                ]
-                            },
-                            displayPercent: true,
-                            direction: 'horizontal',
-                            subLabelValue: 'raw'
-                        });
+            <div class="extra-padding"></div>
 
-                        graph.draw();
-                    });
-                </script>
 
+
+            <div class="col-md-5 extra-padding">
+                <h2>Funnel Chart</h2>
+                <p>Visualize your application numbers and conversion rates.</p>
+            </div>
+
+
+            <div class="extra-padding">
+
+
+                <div class="flex funnel-container">
+                    <div class="funnel"></div>
+
+
+                </div>
+            </div>
+
+            <div class="col-md-5 extra-padding">
+                <h2>All Applications</h2>
+                <p>Track all records to easily monitor progress, statuses, and outcomes.</p>
             </div>
 
 
 
-            <table id="applicationsTable" class="display">
-                <thead>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    var graph = new FunnelGraph({
+                        container: '.funnel',
+                        gradientDirection: 'horizontal',
+                        data: {
+                            labels: ['Applications', 'First Interviews', 'Second Interviews', 'Final Interviews', 'Offers'],
+                            subLabels: ['TotalApp', 'ForRef1', 'ForRef2'],
+                            colors: [
+                                ['#FFB178', '#FF78B1', '#FF3C8E'],
+                                ['#A0BBFF', '#EC77FF'],
+                                ['#A0F9FF', '#7795FF']
+                            ],
+                            values: [
+                                [Number(<%= totalApplications %>), 10, 5],
+                                [Number(<%= firstInterviews %>), 7, 3],
+                                [Number(<%= secondInterviews %>), 4, 2],
+                                [Number(<%= finalInterviews %>), 3, 0],
+                                [Number(<%= offers %>), 1, 0]
+
+                                //[1200, 800, 400], // Total applications, first interviews, second interviews, etc.
+                                //[300, 200, 100], // Adjust these numbers based on real data
+                                //[50, 30, 20]
+                            ]
+                        },
+                        displayPercent: true,
+                        direction: 'horizontal',
+                        subLabelValue: 'raw'
+                    });
+
+                    graph.draw();
+                });
+            </script>
+
+
+
+
+        <table id="applicationsTable" class="display">
+            <thead>
+                <tr>
+                    <th>Status</th>
+                    <th>Name</th>
+                    <th>Company</th>
+                    <th>Role</th>
+
+                    <th>1st Interview</th>
+                    <th>2nd Interview</th>
+                    <th>Final Interview</th>
+                    <th>Offer</th>
+                    <th>Source</th>
+                    <th>Date Created</th>
+
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% applications.forEach(function(application) { %>
                     <tr>
-                        <th>Status</th>
-                        <th>Name</th>
-                        <th>Company</th>
-                        <th>Role</th>
+                        <td>
+                            <%= application.status %>
+                        </td>
+                        <td>
+                            <%= application.name %>
+                        </td>
+                        <td>
+                            <%= application.company %>
+                        </td>
+                        <td>
+                            <%= application.role %>
+                        </td>
 
-                        <th>1st Interview</th>
-                        <th>2nd Interview</th>
-                        <th>Final Interview</th>
-                        <th>Offer</th>
-                        <th>Source</th>
-                        <th>Date Created</th>
+                        <td>
+                            <%= application.firstInterview ? 'Yes' : ' - ' %>
+                        </td>
+                        <td>
+                            <%= application.secondInterview ? 'Yes' : ' - ' %>
+                        </td>
+                        <td>
+                            <%= application.finalInterview ? 'Yes' : ' - ' %>
+                        </td>
+                        <td>
+                            <%= application.offer ? 'Yes' : ' - ' %>
+                        </td>
 
-                        <th>Action</th>
+                        <td>
+                            <%= application.source %>
+                        </td> <!-- Display the source -->
+                        <td>
+                            <%= new Date(application.createdAt).toLocaleString() %>
+                        </td>
+                        <td><a href="/edit/<%= application.id %>">Edit</a></td>
                     </tr>
-                </thead>
-                <tbody>
-                    <% applications.forEach(function(application) { %>
-                        <tr>
-                            <td>
-                                <%= application.status %>
-                            </td>
-                            <td>
-                                <%= application.name %>
-                            </td>
-                            <td>
-                                <%= application.company %>
-                            </td>
-                            <td>
-                                <%= application.role %>
-                            </td>
+                    <% }); %>
+            </tbody>
+        </table>
+    </div>
 
-                            <td>
-                                <%= application.firstInterview ? 'Yes' : ' - ' %>
-                            </td>
-                            <td>
-                                <%= application.secondInterview ? 'Yes' : ' - ' %>
-                            </td>
-                            <td>
-                                <%= application.finalInterview ? 'Yes' : ' - ' %>
-                            </td>
-                            <td>
-                                <%= application.offer ? 'Yes' : ' - ' %>
-                            </td>
-
-                            <td>
-                                <%= application.source %>
-                            </td> <!-- Display the source -->
-                            <td><%= new Date(application.createdAt).toLocaleDateString() %></td>   
-                            <td><a href="/edit/<%= application.id %>">Edit</a></td>
-                        </tr>
-                        <% }); %>
-                </tbody>
-            </table>
         </div>
 
 
@@ -241,7 +309,9 @@
 
 
         <!-- TESTING UPDATE THE BOOTRAP FROM 4.5.2 TO 5.3.3 -->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-lZb2rjSu1NP1RtZ4QWMHpzcTcmE2G5x/4MTqWy8uonMzn6W5PBybQRT5sAO9z50n" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-lZb2rjSu1NP1RtZ4QWMHpzcTcmE2G5x/4MTqWy8uonMzn6W5PBybQRT5sAO9z50n"
+            crossorigin="anonymous"></script>
         <!-- Bootstrap and other dependencies, if needed 
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>-->
@@ -270,6 +340,38 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 
+        <!-- FOR GEN AI CAREER ADVICE -->
+
+        <script>
+            document.getElementById('generateAdviceButton').addEventListener('click', async () => {
+                try {
+                    const response = await fetch('/generate-advice', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    document.getElementById('adviceOutput').innerHTML = data.careerAdvice || '<p>No advice available at this time.</p>';
+                } catch (error) {
+                    console.error('Error fetching advice:', error);
+                    document.getElementById('adviceOutput').innerHTML = `<p>Error: ${error.message}</p>`;
+                }
+            });
+
+        </script>
+
+        <script>
+            // Ensure that #adviceOutput does not change the height of the card
+            document.getElementById('generateAdviceButton').addEventListener('click', function () {
+                document.getElementById('adviceOutput').innerHTML = 'Your AI Coach advice goes here.';
+            });
+        </script>
 
 
 
