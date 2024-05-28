@@ -18,6 +18,10 @@
     <!-- DataTables CSS -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
 
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js" defer></script>
+
+
     <style>
         .extra-padding {
             margin-bottom: 30px;
@@ -32,6 +36,7 @@
 
 <body>
     <%- include('../partials/navbar') %> <!-- Include the navbar -->
+
         <div class="container marketing">
 
             <div class="col-md-7">
@@ -227,6 +232,7 @@
             $(document).ready(function () {
                 console.log("Initializing DataTables");
                 $('#applicationsTable').DataTable({
+                    "responsive": true,  // Enable responsive extension
                     "order": [[0, 'desc']]  // Sort by the first column (ID) in descending order
 
                 });
