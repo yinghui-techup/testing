@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Page</title>
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-template-rows: auto auto;
+            width: 100%;
+            max-width: 1200px; /* Adjust based on your preference */
+            gap: 20px;
+        }
+        .main-text {
+            grid-column: 5 / 9;
+            text-align: left;
+        }
+        .profile-image {
+            grid-column: 5 / 6;
+            width: 150px;
+            height: 150px;
+            background-color: white; /* Example, replace with image */
+            border-radius: 50%;
+            justify-self: start;
+        }
+        .name-text {
+            grid-column: 5 / 9;
+            align-self: center;
+            text-align: left;
+        }
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: repeat(6, 1fr);
+                padding: 10px;
+            }
+            .main-text, .profile-image, .name-text {
+                grid-column: 2 / 6;
+            }
+            .profile-image {
+                justify-self: center;
+            }
+            .name-text {
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="main-text">
+                <p>
+                  This year I volunteered at Govtech’s Girls in Tech program (as a mentor), and got inspired to create this
+                  website as some sort of career hunt power tool from the interactions with the ambitious albeit a little
+                  anxious young ladies.
+                </p>
+                <p>I guess this is also a loving homage to my first big girl job in Shanghai with an AI startup
+                  (specializing in recruitment solutions) </p>
+                <p>Still in search of my “ikigai” - what you love, what you are good at, what you are paid for, and what the
+                  world needs.</p>
+            </div>
+               </div>
+        <div class="profile-image">
+            <!-- Image would be here -->
+        </div>
+        <div class="name-text">
+            <figure>
+                <br><br><br>
+                <blockquote class="blockquote">
+                  <p>YING HUI TAN</p>
+                </blockquote>
+                <figcaption class="blockquote-footer">
+                  Business Analyst, Govtech (IMDA)
+                </figcaption>        </div>
+    </div>
+</body>
+</html>

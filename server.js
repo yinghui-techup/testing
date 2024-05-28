@@ -65,7 +65,9 @@ app.get('/about',(req,res)=>{
     res.render('pages/about');
 });
 
-
+app.get('/profile',(req,res)=>{
+    res.render('pages/profile');
+});
 
 
 
